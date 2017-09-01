@@ -1,0 +1,46 @@
+package ruls
+
+import com.cloud.domain.Person
+import com.cloud.domain.Message
+import com.cloud.service.RuleService
+
+global RuleService ruleService
+
+function void print(String value){
+    System.out.println(value);
+}
+
+
+rule "rule1"
+no-loop true   //当no-loop为false时，为毛巾
+salience 1
+when
+    p : Person(age > 10 && type=="YOUNG")
+    //msg : Message(message=="Hello World")
+    eval(true)
+    eval(p.getType()=="OLD")
+then
+    print("第一阶段");
+    p.setAge(p.getAge() + 1);
+    p.setName("zhangsan");
+
+    //update(p)
+ end
+
+
+ rule "rule2"
+ no-loop true
+salience 100  //salience值越大，其执行优先级越高
+ when
+     p : Person(age > 15 && type=="YOUNG")
+ then
+     print("第二阶段");
+     p.setName("lishi");
+     ruleService.test();
+     //delete(p);
+     //retract(p);
+  end
+
+
+
+
